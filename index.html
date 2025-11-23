@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>单词统计工具</title>
+    <title>单词统计工具——磊磊</title>
+
+
     <style>
         * {
             margin: 0;
@@ -105,6 +107,29 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 10px;
+        }
+
+        .words-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .words-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .words-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .words-list::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
         }
 
         .word-item {
@@ -165,6 +190,64 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
         }
+
+        .music-player {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .music-title {
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .music-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .music-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .music-frame {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        .music-info {
+            margin-top: 10px;
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -201,8 +284,20 @@
         <div class="example-section">
             <div class="example-title">💡 示例文本（点击下方使用）</div>
             <div class="example-text" style="cursor: pointer; margin-top: 10px; padding: 10px; background: white; border-radius: 5px;" onclick="useExample()">
-                "The quick brown fox jumps over the lazy dog. Learning English vocabulary is essential for communication. Practice makes perfect, and consistency is key to mastering new words."
+                "An investment in knowledge always pays the best interests."
             </div>
+        </div>
+
+        <div class="music-player">
+            <div class="music-header">
+                <div class="music-title">🎵 磊磊喜欢的音乐</div>
+                <div class="music-controls">
+                    <button class="music-btn" onclick="playRandomMusic()">🔀播放</button>
+                    <button class="music-btn" onclick="toggleMusic()">⏯️ 显示/隐藏</button>
+                </div>
+            </div>
+            <iframe id="musicFrame" class="music-frame" src="" allowfullscreen></iframe>
+            <div class="music-info">💡 点击"播放"按钮切换音乐</div>
         </div>
     </div>
 
@@ -268,6 +363,45 @@
 
         // 初始化
         updateStats();
+
+        // 音乐播放功能
+        const musicList = [
+            'BV1MT411p7pn',
+            'BV1XS4y1D7s1',
+            'BV1Hs4y187YP',
+            'BV12E411p7fa'
+        ];
+
+        const musicFrame = document.getElementById('musicFrame');
+        let currentMusicIndex = -1;
+
+        function playRandomMusic() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * musicList.length);
+            } while (newIndex === currentMusicIndex && musicList.length > 1);
+            
+            currentMusicIndex = newIndex;
+            const bvid = musicList[currentMusicIndex];
+            // 使用https协议，添加更多参数确保播放
+            musicFrame.src = `https://player.bilibili.com/player.html?bvid=${bvid}&page=1&as_wide=1&high_quality=1&danmaku=0`;
+            musicFrame.style.display = 'block';
+        }
+
+        function toggleMusic() {
+            if (musicFrame.style.display === 'none') {
+                musicFrame.style.display = 'block';
+            } else {
+                musicFrame.style.display = 'none';
+            }
+        }
+
+        // 页面加载后等待一下再播放
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                playRandomMusic();
+            }, 500);
+        });
     </script>
 </body>
 </html>
